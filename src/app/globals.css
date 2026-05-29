@@ -1,26 +1,196 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fff3f1;
+  --foreground: #2a1b2d;
+  --sweet: #fff3f1;
+  --ink: #2a1b2d;
+  --rose: #ff8fb3;
+  --sun: #ffd78a;
+  --sky: #bcd7ff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Gill Sans", "Trebuchet MS", "Segoe Print", "Noto Sans", sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1b141c;
+    --foreground: #f6e9ef;
+    --sweet: #1b141c;
+    --ink: #f6e9ef;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Gill Sans", "Trebuchet MS", "Segoe Print", "Noto Sans", sans-serif;
+  min-height: 100vh;
+}
+
+.bg-sweet {
+  background: radial-gradient(circle at top, #fff7fb 0%, #fff3f1 40%, #ffe7d6 100%);
+}
+
+.text-ink {
+  color: var(--ink);
+}
+
+.font-display {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, "Georgia", serif;
+  letter-spacing: -0.02em;
+}
+
+.bg-orbit {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(40px);
+  opacity: 0.55;
+}
+
+.bg-orbit-one {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(255, 173, 206, 0.8), rgba(255, 173, 206, 0));
+  top: -140px;
+  left: -120px;
+}
+
+.bg-orbit-two {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(167, 205, 255, 0.7), rgba(167, 205, 255, 0));
+  bottom: -200px;
+  right: -160px;
+}
+
+.bg-sparkle {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.45;
+}
+
+.ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 12px 30px rgba(255, 143, 179, 0.25);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tagline {
+  font-size: 0.95rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(42, 27, 45, 0.7);
+}
+
+.name-glow {
+  display: block;
+  margin-top: 12px;
+  font-size: clamp(2.8rem, 6vw, 4.6rem);
+  color: #ff6f9f;
+  text-shadow: 0 12px 40px rgba(255, 111, 159, 0.45);
+}
+
+.wish-card {
+  border-radius: 28px;
+  padding: 24px 28px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 20px 50px rgba(42, 27, 45, 0.12);
+  backdrop-filter: blur(8px);
+  text-align: left;
+  display: grid;
+  gap: 10px;
+}
+
+.wish-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #7c3f6b;
+}
+
+.signature {
+  font-size: 0.95rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(42, 27, 45, 0.65);
+}
+
+.confetti-layer,
+.petal-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -15vh;
+  left: var(--x);
+  width: var(--size);
+  height: calc(var(--size) * 0.45);
+  background: hsl(var(--hue) 80% 65%);
+  border-radius: 3px;
+  animation: confetti-fall var(--duration) linear var(--delay) infinite;
+}
+
+.petal {
+  position: absolute;
+  top: -20vh;
+  left: var(--x);
+  width: var(--size);
+  height: calc(var(--size) * 1.45);
+  background: linear-gradient(145deg, #ffd6e2, #ff9fc5);
+  border-radius: 60% 40% 60% 40%;
+  filter: drop-shadow(0 6px 12px rgba(255, 159, 197, 0.4));
+  animation: petal-fall var(--duration) ease-in-out var(--delay) infinite;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 115vh, 0) rotate(540deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(30px, 120vh, 0) rotate(220deg);
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti-piece,
+  .petal {
+    animation: none;
+  }
 }
