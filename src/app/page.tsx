@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Confetti {
   id: number;
@@ -19,8 +19,19 @@ interface Flower {
 
 export default function Home() {
   const [confetti, setConfetti] = useState<Confetti[]>([]);
+  const [wishBurst, setWishBurst] = useState<Confetti[]>([]);
   const [flowers, setFlowers] = useState<Flower[]>([]);
   const [isPressed, setIsPressed] = useState(false);
+  const [puzzleInput, setPuzzleInput] = useState("");
+  const [puzzleSolved, setPuzzleSolved] = useState(false);
+  const [puzzleHint, setPuzzleHint] = useState("");
+  const [wishLine, setWishLine] = useState("");
+  const burstTimerRef = useRef<number | null>(null);
+  const [wishFlash, setWishFlash] = useState(false);
+  const flashTimerRef = useRef<number | null>(null);
+  const [gameReveal, setGameReveal] = useState<number | null>(null);
+  const [gameWin, setGameWin] = useState(false);
+  const [winningIndex, setWinningIndex] = useState(() => Math.floor(Math.random() * 3));
 
   useEffect(() => {
     // Generate confetti
@@ -43,6 +54,53 @@ export default function Home() {
     setFlowers(flw);
   }, []);
 
+  const wishes = [
+    "Your wish is already on its way. ✨",
+    "May your year sparkle with kindness and sweet surprises.",
+    "A little magic for you, right now. 🌸",
+    "Wishes made with love always find their way home.",
+  ];
+
+  const triggerWish = () => {
+    const burst = Array.from({ length: 28 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      delay: Math.random() * 0.2,
+      duration: 1.6 + Math.random() * 0.8,
+    }));
+    setWishBurst(burst);
+    setWishLine(wishes[Math.floor(Math.random() * wishes.length)]);
+    setWishFlash(true);
+
+    if (burstTimerRef.current) {
+      window.clearTimeout(burstTimerRef.current);
+    }
+    burstTimerRef.current = window.setTimeout(() => {
+      setWishBurst([]);
+    }, 2200);
+
+    if (flashTimerRef.current) {
+      window.clearTimeout(flashTimerRef.current);
+    }
+    flashTimerRef.current = window.setTimeout(() => {
+      setWishFlash(false);
+    }, 900);
+  };
+
+  const handleGamePick = (index: number) => {
+    if (gameReveal !== null) {
+      return;
+    }
+    setGameReveal(index);
+    setGameWin(index === winningIndex);
+  };
+
+  const resetGame = () => {
+    setGameReveal(null);
+    setGameWin(false);
+    setWinningIndex(Math.floor(Math.random() * 3));
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-cream via-rose-50 to-cream">
       {/* Confetti */}
@@ -58,6 +116,19 @@ export default function Home() {
             }}
           >
             {["🎉", "✨", "💕", "🎂"][Math.floor(Math.random() * 4)]}
+          </div>
+        ))}
+        {wishBurst.map((c) => (
+          <div
+            key={`burst-${c.id}`}
+            className="absolute animate-confetti"
+            style={{
+              left: `${c.left}%`,
+              top: "-10px",
+              animation: `confetti ${c.duration}s ease-in ${c.delay}s`,
+            }}
+          >
+            {"✨"}
           </div>
         ))}
       </div>
@@ -117,24 +188,86 @@ export default function Home() {
             On this beautiful day, we celebrate you and everything that makes you wonderful. Your smile brings joy, your kindness inspires us, and your presence makes the world more beautiful.
           </p>
 
-          {/* Interactive button */}
-          <div className="pt-6">
-            <button
-              onClick={() => setIsPressed(!isPressed)}
-              onMouseDown={() => setIsPressed(true)}
-              onMouseUp={() => setIsPressed(false)}
-              className={`relative px-10 py-4 rounded-full font-semibold text-white text-lg transition-all duration-300 transform ${
-                isPressed ? "scale-95 shadow-lg" : "scale-100 shadow-xl hover:shadow-2xl hover:scale-105"
-              } bg-gradient-to-r from-rose-400 to-pink-500`}
-            >
-              🎉 Make a Wish
-              {isPressed && (
-                <>
-                  <span className="absolute inset-0 rounded-full bg-white/30 animate-ping"></span>
-                  <span className="absolute inset-0 rounded-full bg-white/20 animate-ping" style={{ animationDelay: "0.1s" }}></span>
-                </>
-              )}
-            </button>
+          {/* Wish + puzzle */}
+          <div className="pt-6 space-y-4">
+            <div className="space-y-3">
+              <p className="text-sm text-foreground/80">Solve the puzzle or find the lucky petal to trigger a special sparkle.</p>
+            </div>
+
+            <div className="mx-auto max-w-md rounded-2xl bg-white/60 p-5 text-left shadow-lg">
+              <p className="text-sm uppercase tracking-[0.2em] text-rose-400">Bonus Puzzle</p>
+              <p className="mt-2 text-lg font-semibold text-foreground">How many letters are in “Monisha”?</p>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                <input
+                  value={puzzleInput}
+                  onChange={(event) => {
+                    setPuzzleInput(event.target.value);
+                    setPuzzleHint("");
+                  }}
+                  inputMode="numeric"
+                  placeholder="Type a number"
+                  className="w-full rounded-full border border-rose-200 bg-white/80 px-4 py-2 text-foreground shadow-sm focus:border-rose-400 focus:outline-none"
+                />
+                <button
+                  onClick={() => {
+                    if (puzzleInput.trim() === "7") {
+                      setPuzzleSolved(true);
+                      setPuzzleHint("");
+                      triggerWish();
+                    } else {
+                      setPuzzleHint("Almost! Count the letters carefully.");
+                    }
+                  }}
+                  className="rounded-full bg-rose-400 px-6 py-2 font-semibold text-white shadow-md transition hover:bg-rose-500"
+                >
+                  Unlock
+                </button>
+              </div>
+              {puzzleHint ? <p className="mt-3 text-sm text-rose-500">{puzzleHint}</p> : null}
+              {puzzleSolved ? (
+                <p className="mt-3 text-sm font-semibold text-rose-400">Bonus sparkle unlocked.</p>
+              ) : null}
+            </div>
+          </div>
+
+          {/* Mini game */}
+          <div className="mt-6 rounded-3xl border border-white/60 bg-white/40 p-6 shadow-xl">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm uppercase tracking-[0.25em] text-rose-400">Lucky Petal</p>
+                <p className="mt-1 text-lg font-semibold text-foreground">Pick the petal with the hidden sparkle.</p>
+              </div>
+              <button
+                onClick={resetGame}
+                className="rounded-full border border-rose-200 bg-white/70 px-4 py-2 text-sm font-semibold text-rose-500 transition hover:bg-white"
+              >
+                Play again
+              </button>
+            </div>
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-3">
+              {[0, 1, 2].map((index) => {
+                const revealed = gameReveal === index;
+                const isWinner = revealed && index === winningIndex;
+                return (
+                  <button
+                    key={`petal-${index}`}
+                    onClick={() => handleGamePick(index)}
+                    className={`rounded-2xl border border-white/60 px-6 py-8 text-3xl shadow-md transition hover:-translate-y-1 hover:bg-white/70 ${
+                      revealed ? "bg-white/90" : "bg-white/40"
+                    }`}
+                  >
+                    {revealed ? (isWinner ? "✨" : "🌸") : "🌷"}
+                  </button>
+                );
+              })}
+            </div>
+
+            {gameReveal !== null ? (
+              <p className="mt-4 text-sm font-semibold text-rose-500">
+                {gameWin ? "You found the sparkle! Make a wish." : "So close! Try again for the sparkle."}
+              </p>
+            ) : null}
           </div>
 
           {/* Bottom decoration */}
