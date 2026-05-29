@@ -1,135 +1,194 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface Confetti {
+  id: number;
+  left: number;
+  delay: number;
+  duration: number;
+}
+
+interface Flower {
+  id: number;
+  left: number;
+  top: number;
+  delay: number;
+  emoji: string;
+}
 
 export default function Home() {
-  const [isHovered, setIsHovered] = useState(false);
+  const [confetti, setConfetti] = useState<Confetti[]>([]);
+  const [flowers, setFlowers] = useState<Flower[]>([]);
+  const [isPressed, setIsPressed] = useState(false);
+
+  useEffect(() => {
+    // Generate confetti
+    const conf = Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      delay: Math.random() * 0.5,
+      duration: 2 + Math.random() * 1,
+    }));
+    setConfetti(conf);
+
+    // Generate flowers
+    const flw = Array.from({ length: 8 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: -50 - Math.random() * 50,
+      delay: Math.random() * 0.8,
+      emoji: ["🌸", "🌷", "🌹", "🌺"][Math.floor(Math.random() * 4)],
+    }));
+    setFlowers(flw);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Hero Section */}
-      <div className="relative min-h-screen flex flex-col items-center justify-center px-6 py-20">
-        {/* Subtle background elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-accent/5 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/5 rounded-full blur-3xl"></div>
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-cream via-rose-50 to-cream">
+      {/* Confetti */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {confetti.map((c) => (
+          <div
+            key={c.id}
+            className="absolute animate-confetti"
+            style={{
+              left: `${c.left}%`,
+              top: "-20px",
+              animation: `confetti ${c.duration}s ease-in ${c.delay}s infinite`,
+            }}
+          >
+            {["🎉", "✨", "💕", "🎂"][Math.floor(Math.random() * 4)]}
+          </div>
+        ))}
+      </div>
+
+      {/* Floating Flowers Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {flowers.map((f) => (
+          <div
+            key={f.id}
+            className="absolute text-4xl opacity-20 animate-float"
+            style={{
+              left: `${f.left}%`,
+              top: `${f.top}px`,
+              animation: `float ${8 + Math.random() * 4}s ease-in-out ${f.delay}s infinite`,
+            }}
+          >
+            {f.emoji}
+          </div>
+        ))}
+      </div>
+
+      {/* Main Content */}
+      <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-20">
+        {/* Decorative flowers around title */}
+        <div className="absolute top-10 left-5 text-5xl opacity-30 animate-bounce">🌸</div>
+        <div className="absolute top-20 right-8 text-6xl opacity-30 animate-bounce" style={{ animationDelay: "0.3s" }}>
+          🌷
+        </div>
+        <div className="absolute bottom-40 left-10 text-5xl opacity-30 animate-bounce" style={{ animationDelay: "0.6s" }}>
+          🌹
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
-          {/* Top label */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-foreground/10 bg-foreground/5 w-fit mx-auto">
-            <span className="w-2 h-2 bg-accent rounded-full"></span>
-            <span className="text-sm font-medium tracking-wide">CELEBRATING TODAY</span>
+        {/* Main greeting card */}
+        <div className="max-w-3xl mx-auto text-center space-y-8 bg-white/40 backdrop-blur-md rounded-3xl p-12 shadow-2xl border border-white/60">
+          {/* Top decoration */}
+          <div className="flex justify-center gap-3">
+            <span className="text-4xl">🌸</span>
+            <span className="text-4xl">🎂</span>
+            <span className="text-4xl">🌷</span>
           </div>
 
-          {/* Main heading */}
-          <div className="space-y-4">
-            <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl font-light leading-tight text-balance">
+          {/* Main text */}
+          <div className="space-y-6">
+            <p className="text-rose-400 font-display text-lg font-semibold tracking-widest">
+              ✨ A SPECIAL DAY FOR SOMEONE SPECIAL ✨
+            </p>
+            <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl font-bold text-gradient">
               Happy Birthday
             </h1>
-            <p className="font-serif text-5xl sm:text-6xl lg:text-7xl font-light text-accent">
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-light text-rose-500 animate-pulse">
               Monisha
-            </p>
+            </h2>
           </div>
 
-          {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed font-light">
-            May this day be filled with moments that take your breath away and memories that warm your heart for years to come.
+          {/* Message */}
+          <p className="text-foreground/80 text-lg leading-relaxed max-w-xl mx-auto font-light">
+            On this beautiful day, we celebrate you and everything that makes you wonderful. Your smile brings joy, your kindness inspires us, and your presence makes the world more beautiful.
           </p>
 
-          {/* CTA Button */}
-          <div className="pt-4">
+          {/* Interactive button */}
+          <div className="pt-6">
             <button
-              onClick={() => setIsHovered(!isHovered)}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background rounded-full hover:gap-4 transition-all duration-300 font-medium text-lg"
+              onClick={() => setIsPressed(!isPressed)}
+              onMouseDown={() => setIsPressed(true)}
+              onMouseUp={() => setIsPressed(false)}
+              className={`relative px-10 py-4 rounded-full font-semibold text-white text-lg transition-all duration-300 transform ${
+                isPressed ? "scale-95 shadow-lg" : "scale-100 shadow-xl hover:shadow-2xl hover:scale-105"
+              } bg-gradient-to-r from-rose-400 to-pink-500`}
             >
-              Celebrate with me
-              <span className={`transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`}>→</span>
+              🎉 Make a Wish
+              {isPressed && (
+                <>
+                  <span className="absolute inset-0 rounded-full bg-white/30 animate-ping"></span>
+                  <span className="absolute inset-0 rounded-full bg-white/20 animate-ping" style={{ animationDelay: "0.1s" }}></span>
+                </>
+              )}
             </button>
           </div>
-        </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="animate-bounce">
-            <div className="w-6 h-10 border-2 border-foreground/30 rounded-full flex items-start justify-center p-2">
-              <div className="w-1 h-2 bg-foreground/30 rounded-full"></div>
-            </div>
+          {/* Bottom decoration */}
+          <div className="flex justify-center gap-3 pt-4">
+            <span className="text-4xl">🌺</span>
+            <span className="text-4xl">💫</span>
+            <span className="text-4xl">🌸</span>
           </div>
         </div>
-      </div>
 
-      {/* Wishes Section */}
-      <div className="py-20 px-6 bg-secondary/5 border-t border-foreground/10">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl sm:text-5xl font-light mb-4">Birthday Wishes</h2>
-            <div className="w-12 h-1 bg-accent mx-auto"></div>
-          </div>
+        {/* Wishes section */}
+        <div className="mt-24 max-w-4xl mx-auto w-full">
+          <h2 className="text-center font-serif text-4xl mb-12 text-foreground font-light">
+            Special Wishes for You
+          </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6">
             {[
               {
+                emoji: "🌟",
+                title: "Be You",
+                message: "Never apologize for being authentically, brilliantly you.",
+              },
+              {
+                emoji: "💖",
+                title: "Love Always",
+                message: "Surround yourself with love and give it freely to others.",
+              },
+              {
+                emoji: "🎈",
                 title: "Dream Big",
-                text: "Chase the dreams that make your heart race and never settle for anything less than extraordinary.",
-              },
-              {
-                title: "Live Fully",
-                text: "Every moment is a gift. Live with intention, love with passion, and celebrate every small victory.",
-              },
-              {
-                title: "Shine Bright",
-                text: "Your light illuminates the world around you. Keep being the remarkable person you are.",
+                message: "Your dreams are valid and deserve to come true.",
               },
             ].map((wish, i) => (
-              <div key={i} className="group p-8 rounded-lg border border-foreground/10 hover:border-accent/30 bg-white/2 hover:bg-accent/5 transition-all duration-300">
-                <h3 className="font-serif text-2xl font-light mb-4 text-accent">{wish.title}</h3>
-                <p className="text-foreground/70 font-light leading-relaxed">{wish.text}</p>
+              <div
+                key={i}
+                className="group p-8 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/50 hover:bg-white/50 transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <p className="text-5xl mb-4">{wish.emoji}</p>
+                <h3 className="font-serif text-2xl font-light text-rose-500 mb-2">{wish.title}</h3>
+                <p className="text-foreground/70 font-light leading-relaxed">{wish.message}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Timeline Section */}
-      <div className="py-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl sm:text-5xl font-light mb-4">Your Journey</h2>
-            <div className="w-12 h-1 bg-accent mx-auto"></div>
-          </div>
-
-          <div className="space-y-12">
-            {[
-              { year: "Today", title: "A New Year Begins", desc: "Celebrating the wonderful person you are" },
-              { year: "This Year", title: "New Adventures Await", desc: "May you find joy in every unexpected moment" },
-              { year: "Forever", title: "Timeless Memories", desc: "Building a legacy of love and laughter" },
-            ].map((item, i) => (
-              <div key={i} className="flex gap-8 items-start">
-                <div className="flex-shrink-0 w-24">
-                  <div className="text-sm font-medium text-accent">{item.year}</div>
-                </div>
-                <div className="flex-grow pb-8 border-l border-foreground/10 pl-8 relative">
-                  <div className="absolute w-3 h-3 bg-accent rounded-full -left-[7px] top-1"></div>
-                  <h3 className="font-serif text-2xl font-light mb-2">{item.title}</h3>
-                  <p className="text-foreground/60 font-light">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="py-12 px-6 border-t border-foreground/10 bg-foreground/2">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-foreground/60 font-light text-sm">
-            With love and warmest wishes
+        {/* Final message */}
+        <div className="mt-20 text-center max-w-2xl mx-auto">
+          <p className="font-light text-lg text-foreground/70 mb-4">
+            Here's to a year filled with beautiful moments, wonderful adventures, and endless happiness.
           </p>
+          <p className="font-display text-rose-400 text-2xl">✨ Wishing you the most magical birthday ✨</p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
