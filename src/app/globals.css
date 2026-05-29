@@ -1,16 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
-  --foreground: #1a1a1a;
-  --primary: #000000;
-  --secondary: #f0f0f0;
-  --accent: #2563eb;
-  --sweet: #fafafa;
-  --ink: #1a1a1a;
-  --rose: #ef4444;
+  --background: #fff5f7;
+  --foreground: #4a2c3e;
+  --primary: #f472b6;
+  --secondary: #fbcfe8;
+  --accent: #ec4899;
+  --sweet: #fff5f7;
+  --ink: #4a2c3e;
+  --rose: #f472b6;
   --sun: #fbbf24;
-  --sky: #2563eb;
+  --sky: #06b6d4;
+  --cream: #fff5f7;
 }
 
 @theme inline {
@@ -52,6 +53,43 @@ h1, h2, h3 {
   }
 }
 
+@keyframes confetti {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotateZ(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100vh) rotateZ(720deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotateZ(-10deg);
+  }
+  50% {
+    transform: translateY(-30px) rotateZ(10deg);
+  }
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
+}
+
 /* Utility classes */
 .text-balance {
   text-wrap: balance;
@@ -63,4 +101,36 @@ h1, h2, h3 {
 
 .font-sans {
   font-family: var(--font-sans);
+}
+
+.font-display {
+  font-family: "Georgia", "Garamond", serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #f472b6 0%, #ec4899 50%, #be185d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.animate-confetti {
+  animation: confetti 3s ease-out forwards !important;
+}
+
+.animate-float {
+  animation: float-slow 12s ease-in-out infinite !important;
+}
+
+.cream {
+  --color-cream: #fff5f7;
+}
+
+/* Tailwind color extensions */
+@supports (background: hsl(from white h s l)) {
+  .bg-cream {
+    background-color: hsl(from #fff5f7 h s l);
+  }
 }
