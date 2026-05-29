@@ -1,40 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fff3f1;
-  --foreground: #2a1b2d;
-  --sweet: #fff3f1;
-  --ink: #2a1b2d;
-  --rose: #ff8fb3;
+  --background: #0f0a15;
+  --foreground: #f5f1ff;
+  --primary: #e91e8c;
+  --secondary: #b819d9;
+  --accent: #00d4ff;
+  --sweet: #1a1025;
+  --ink: #f5f1ff;
+  --rose: #ff6bb3;
   --sun: #ffd78a;
-  --sky: #bcd7ff;
+  --sky: #00d4ff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Gill Sans", "Trebuchet MS", "Segoe Print", "Noto Sans", sans-serif;
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", sans-serif;
   --font-mono: "Courier New", Courier, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1b141c;
-    --foreground: #f6e9ef;
-    --sweet: #1b141c;
-    --ink: #f6e9ef;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Gill Sans", "Trebuchet MS", "Segoe Print", "Noto Sans", sans-serif;
+  font-family: "Inter", "Segoe UI", "Helvetica Neue", sans-serif;
   min-height: 100vh;
+  font-smoothing: antialiased;
 }
 
 .bg-sweet {
-  background: radial-gradient(circle at top, #fff7fb 0%, #fff3f1 40%, #ffe7d6 100%);
+  background: linear-gradient(135deg, #0f0a15 0%, #1a0f2e 25%, #2d1b47 50%, #1a0f2e 75%, #0f0a15 100%);
 }
 
 .text-ink {
@@ -56,25 +54,28 @@ body {
 .bg-orbit-one {
   width: 420px;
   height: 420px;
-  background: radial-gradient(circle, rgba(255, 173, 206, 0.8), rgba(255, 173, 206, 0));
+  background: radial-gradient(circle, rgba(233, 30, 140, 0.4), rgba(233, 30, 140, 0));
   top: -140px;
   left: -120px;
+  animation: float 8s ease-in-out infinite;
 }
 
 .bg-orbit-two {
   width: 520px;
   height: 520px;
-  background: radial-gradient(circle, rgba(167, 205, 255, 0.7), rgba(167, 205, 255, 0));
+  background: radial-gradient(circle, rgba(184, 25, 217, 0.3), rgba(184, 25, 217, 0));
   bottom: -200px;
   right: -160px;
+  animation: float 10s ease-in-out infinite 2s;
 }
 
 .bg-sparkle {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 1px);
-  background-size: 36px 36px;
-  opacity: 0.45;
+  background-image: radial-gradient(circle, rgba(0, 212, 255, 0.8) 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.15;
+  animation: shimmer 6s ease-in-out infinite;
 }
 
 .ribbon {
@@ -82,12 +83,16 @@ body {
   align-items: center;
   gap: 8px;
   border-radius: 999px;
-  padding: 8px 20px;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 12px 30px rgba(255, 143, 179, 0.25);
-  font-size: 0.9rem;
-  letter-spacing: 0.08em;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, rgba(233, 30, 140, 0.3), rgba(184, 25, 217, 0.3));
+  border: 2px solid rgba(0, 212, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(233, 30, 140, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  font-weight: 600;
+  color: #00d4ff;
+  backdrop-filter: blur(10px);
 }
 
 .tagline {
@@ -100,9 +105,35 @@ body {
 .name-glow {
   display: block;
   margin-top: 12px;
-  font-size: clamp(2.8rem, 6vw, 4.6rem);
-  color: #ff6f9f;
-  text-shadow: 0 12px 40px rgba(255, 111, 159, 0.45);
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+  background: linear-gradient(135deg, #ff6bb3 0%, #e91e8c 50%, #b819d9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(233, 30, 140, 0.5);
+  filter: drop-shadow(0 0 20px rgba(233, 30, 140, 0.4));
+  font-weight: 900;
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.wish-card-new {
+  border-radius: 20px;
+  padding: 20px 24px;
+  background: rgba(233, 30, 140, 0.1);
+  border: 1px solid rgba(233, 30, 140, 0.3);
+  box-shadow: 0 8px 32px rgba(233, 30, 140, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  text-align: left;
+  display: grid;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.wish-card-new:hover {
+  background: rgba(233, 30, 140, 0.15);
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(233, 30, 140, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 .wish-card {
@@ -119,7 +150,7 @@ body {
 .wish-title {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #7c3f6b;
+  color: #ff6bb3;
 }
 
 .signature {
@@ -188,9 +219,92 @@ body {
   }
 }
 
+.cake-button {
+  outline: none;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.cake-button::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.3), transparent 70%);
+  opacity: 0;
+  animation: pulse-ring 1s ease-out;
+}
+
+.cake-button:active::before {
+  animation: pulse-ring 0.6s ease-out;
+}
+
+.achievement-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.achievement-card:hover {
+  transform: translateY(-4px);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(20px, -20px) rotate(5deg);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(233, 30, 140, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(233, 30, 140, 0.6));
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7);
+    opacity: 1;
+  }
+  100% {
+    box-shadow: 0 0 0 30px rgba(0, 212, 255, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .confetti-piece,
-  .petal {
+  .petal,
+  .cake-button,
+  .name-glow {
     animation: none;
   }
 }
