@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { HeroSection } from '@/components/hero-section';
 import { AnimatedCake } from '@/components/animated-cake';
@@ -412,39 +411,6 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* Games section */}
-        <motion.section
-          className="mt-24 w-full max-w-2xl"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="glass-card rounded-3xl p-6 sm:p-8 text-center space-y-6">
-            <div>
-              <p className="text-sm uppercase tracking-widest font-semibold text-accent mb-2">
-                Interactive Experience
-              </p>
-              <h2 className="font-serif text-3xl sm:text-4xl font-light text-foreground mb-3">
-                Play Birthday Games
-              </h2>
-              <p className="text-foreground/70 text-sm sm:text-base">
-                Complete all 5 fun games and unlock special rewards to celebrate in style!
-              </p>
-            </div>
-
-            <Link href="/games">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="glow-btn text-base sm:text-lg px-8 py-3"
-              >
-                Start Playing
-              </motion.button>
-            </Link>
-          </div>
-        </motion.section>
-
         {/* Celebrate button and final message */}
         <motion.section
           className="mt-24 text-center max-w-2xl space-y-8"
@@ -464,7 +430,7 @@ export default function Home() {
             whileTap={{ scale: 0.95 }}
             className="glow-btn mx-auto text-base sm:text-lg px-8 py-3"
           >
-            Celebrate Now! ���
+            Celebrate Now! 🎉
           </motion.button>
 
           <p className="font-display text-accent text-xl sm:text-2xl">
